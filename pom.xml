@@ -33,6 +33,7 @@
 		<module>config-service</module>
 		<module>discovery-service</module>
 		<module>gateway-service</module>
+		<module>book-service</module>
 	</modules>
 
 </project>
