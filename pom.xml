@@ -25,6 +25,7 @@
 		<module>gateway-service</module>
 		<module>book-service</module>
 		<module>user-service</module>
+		<module>auth-service</module>
 	</modules>
 
 </project>
