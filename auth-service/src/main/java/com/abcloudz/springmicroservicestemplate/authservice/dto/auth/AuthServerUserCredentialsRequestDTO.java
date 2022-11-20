@@ -9,8 +9,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Builder
 @Data
-public class SignInResponseDTO {
+public class AuthServerUserCredentialsRequestDTO {
 
-    private String accessToken;
-    private String refreshToken;
+    private String type;
+    private String value;
+    private boolean temporary;
 }

@@ -17,7 +17,8 @@ public enum Error {
     INTERNAL_SERVER_ERROR_OCCURRED("error.internal.server.error.occurred"),
     SEARCH_CRITERIA_OPERATION_NOT_SUPPORTED("error.search.criteria.operation.not.supported"),
     CONVERSION_FAILED("error.conversion.failed"),
-    LOG_CONTROLLER_EXECUTE("error.log.controller.execute");
+    LOG_CONTROLLER_EXECUTE("error.log.controller.execute"),
+    SIGNUP_FAILED("error.signup.failed");
 
     private final String key;
 }

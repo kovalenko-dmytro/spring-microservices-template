@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
+import java.util.Locale;
 
 @Tag(name = "Auth Service REST API")
 @RestController
@@ -19,14 +20,15 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @PostMapping(value = "/signin")
+    @PostMapping(value = "/sign-in")
     public ResponseEntity<SignInResponseDTO> signIn(@Valid @RequestBody SignInRequestDTO requestDTO) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(authService.signIn(requestDTO));
     }
 
-    @PostMapping(value = "/signup")
-    public ResponseEntity<Void> signUp(@Valid @RequestBody SignUpRequestDTO requestDTO) {
-        authService.signUp(requestDTO);
+    @PostMapping(value = "/sign-up")
+    public ResponseEntity<?> signUp(@Valid @RequestBody SignUpRequestDTO requestDTO,
+                                       @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale) {
+        authService.signUp(requestDTO, locale);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 

@@ -9,6 +9,7 @@ import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Locale;
 
 @Service
 @RequiredArgsConstructor
@@ -20,12 +21,17 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public SignInResponseDTO signIn(SignInRequestDTO signInRequestDTO) {
-        return null;
+        AuthServerAccessDetailResponseDTO details = authServerClient.getUserAccessDetails(signInRequestDTO);
+        return SignInResponseDTO.builder()
+            .accessToken(details.getAccessToken())
+            .refreshToken(details.getRefreshToken())
+            .build();
     }
 
     @Override
-    public void signUp(SignUpRequestDTO signUpRequestDTO) {
-
+    public void signUp(SignUpRequestDTO signUpRequestDTO, Locale locale) {
+        AuthServerAccessDetailResponseDTO details = authServerClient.getAdminAccessDetails();
+        authServerClient.createUser(details.getAccessToken(), signUpRequestDTO, locale);
     }
 
     @Override
