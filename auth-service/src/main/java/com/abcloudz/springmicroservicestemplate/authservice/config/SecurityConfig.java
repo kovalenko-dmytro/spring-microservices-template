@@ -1,44 +1,35 @@
 package com.abcloudz.springmicroservicestemplate.authservice.config;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@RequiredArgsConstructor
 public class SecurityConfig {
 
     @Bean
-    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(new SessionRegistryImpl());
-    }
-
-    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.authorizeRequests()
-            .antMatchers("/api/v1/auth/sign-in", "/api/v1/auth/sign-up", "/actuator/**")
+        http.csrf()
+            .disable()
+            .authorizeRequests()
+            .antMatchers("/api/v1/auth/sign-in", "/api/v1/auth/sign-up")
             .permitAll()
             .anyRequest()
-            .authenticated();
-
-        http.oauth2Login()
+            .authenticated()
+            /*.and()
+            .oauth2Login()*/
             .and()
             .oauth2ResourceServer()
-            .jwt();
+            .jwt()
+            .and()
+            .and()
+            .logout()
+            .logoutUrl("/api/v1/auth/logout");
 
-        http.logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/api/v1/auth/logout"))
-            .clearAuthentication(true);
         return http.build();
     }
 
@@ -46,12 +37,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) ->
             web.ignoring()
-            .antMatchers("/api-docs",
-                "/v3/api-docs/**",
-                "/configuration/ui",
-                "/swagger-resources/**",
-                "/configuration/security",
-                "/webjars/**",
-                "/swagger-ui/**");
+            .antMatchers("/api/v1/auth/sign-in",
+                "/api/v1/auth/sign-up");
     }
 }
