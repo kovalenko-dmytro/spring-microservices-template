@@ -2,20 +2,26 @@ package com.abcloudz.springmicroservicestemplate.gatewayservice.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableReactiveMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
-import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
-import org.springframework.security.config.web.server.ServerHttpSecurity;
-import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-@EnableWebFluxSecurity
-@EnableReactiveMethodSecurity
+@EnableWebSecurity
 public class SecurityConfig {
 
     @Bean
-    public SecurityWebFilterChain filterChain(ServerHttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
+            .csrf()
+            .disable()
+            .authorizeRequests()
+            .anyRequest()
+            .permitAll();
+
+        return http.build();
+        /*http
             .csrf()
             .disable()
             .authorizeExchange()
@@ -24,8 +30,8 @@ public class SecurityConfig {
             .permitAll()
             .anyExchange()
             .authenticated()
-            /*.and()
-            .oauth2Login()*/
+            .and()
+            .oauth2Login()
             .and()
             .oauth2ResourceServer()
             .jwt()
@@ -34,7 +40,7 @@ public class SecurityConfig {
             .logout()
             .logoutUrl("/api/v1/auth/logout");
 
-        return http.build();
+        return http.build();*/
     }
 
     @Bean
@@ -42,6 +48,14 @@ public class SecurityConfig {
         return (web) ->
             web.ignoring()
                 .antMatchers("/api/v1/auth/sign-in",
-                    "/api/v1/auth/sign-up");
+                    "/api/v1/auth/sign-up",
+                    "/api-docs",
+                    "/api-docs/**",
+                    "/v3/api-docs/**",
+                    "/configuration/ui",
+                    "/swagger-resources/**",
+                    "/configuration/security",
+                    "/webjars/**",
+                    "/swagger-ui/**");
     }
 }

@@ -13,15 +13,23 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf()
+        http
+            .csrf()
+            .disable()
+            .authorizeRequests()
+            .anyRequest()
+            .permitAll();
+
+        return http.build();
+        /*http.csrf()
             .disable()
             .authorizeRequests()
             .antMatchers("/api/v1/auth/sign-in", "/api/v1/auth/sign-up")
             .permitAll()
             .anyRequest()
             .authenticated()
-            /*.and()
-            .oauth2Login()*/
+            .and()
+            .oauth2Login()
             .and()
             .oauth2ResourceServer()
             .jwt()
@@ -30,7 +38,7 @@ public class SecurityConfig {
             .logout()
             .logoutUrl("/api/v1/auth/logout");
 
-        return http.build();
+        return http.build();*/
     }
 
     @Bean
@@ -38,6 +46,14 @@ public class SecurityConfig {
         return (web) ->
             web.ignoring()
             .antMatchers("/api/v1/auth/sign-in",
-                "/api/v1/auth/sign-up");
+                "/api/v1/auth/sign-up",
+                "/api-docs",
+                "/api-docs/**",
+                "/v3/api-docs/**",
+                "/configuration/ui",
+                "/swagger-resources/**",
+                "/configuration/security",
+                "/webjars/**",
+                "/swagger-ui/**");
     }
 }

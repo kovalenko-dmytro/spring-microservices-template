@@ -7,10 +7,7 @@ import lombok.RequiredArgsConstructor;
 @Getter
 public enum OpenApi {
 
-    OPEN_API_INFO_TITLE("Auth Service REST API documentation"),
-    OPEN_API_SECURITY_SCHEMA_NAME("bearerAuth"),
-    OPEN_API_SECURITY_SCHEMA("bearer"),
-    OPEN_API_SECURITY_SCHEMA_BEARER_FORMAT("JWT");
+    OPEN_API_INFO_TITLE("Auth Service REST API documentation");
 
     private final String value;
 }

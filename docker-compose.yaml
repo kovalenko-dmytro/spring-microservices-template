@@ -1,5 +1,14 @@
 version: '3'
 services:
+
+  redis:
+    container_name: redis
+    image: redis:7.0.5-alpine
+    restart: always
+    ports:
+      - '6379:6379'
+    command: redis-server --save 20 1 --loglevel warning --requirepass admin
+
   elasticsearch:
     container_name: elasticsearch
     image: elasticsearch:7.17.7
@@ -44,37 +53,3 @@ services:
       interval: 10s
       timeout: 5s
       retries: 10
-
-  keycloak_db:
-    container_name: keycloak_db
-    hostname: 127.0.0.1
-    image: postgres
-    ports:
-      - "54320:5432"
-    environment:
-      POSTGRES_DB: microservices_template_keycloak_db
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: root
-
-  keycloak:
-    container_name: keycloak
-    image: jboss/keycloak:latest
-    environment:
-      KEYCLOAK_USER: admin
-      KEYCLOAK_PASSWORD: admin
-      DB_VENDOR: POSTGRES
-      DB_ADDR: keycloak_db
-      DB_DATABASE: microservices_template_keycloak_db
-      DB_SCHEMA: public
-      DB_USER: postgres
-      DB_PASSWORD: root
-    ports:
-      - "18080:18080"
-    command:
-      - "-b"
-      - "0.0.0.0"
-      - "-Djboss.socket.binding.port-offset=10000"
-    restart: on-failure
-    depends_on:
-      keycloak_db:
-        condition: service_started
