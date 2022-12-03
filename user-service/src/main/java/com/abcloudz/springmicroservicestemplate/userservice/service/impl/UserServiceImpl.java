@@ -1,9 +1,12 @@
 package com.abcloudz.springmicroservicestemplate.userservice.service.impl;
 
+import com.abcloudz.springmicroservicestemplate.userservice.common.Entity;
 import com.abcloudz.springmicroservicestemplate.userservice.common.message.Error;
+import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserDetailsResponseDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserRequestDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserResponseDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserSearchRequestDTO;
+import com.abcloudz.springmicroservicestemplate.userservice.exception.EntityNotFoundException;
 import com.abcloudz.springmicroservicestemplate.userservice.exception.UserServiceApplicationException;
 import com.abcloudz.springmicroservicestemplate.userservice.model.User;
 import com.abcloudz.springmicroservicestemplate.userservice.model.UserRole;
@@ -20,7 +23,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.Locale;
+import java.util.Objects;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -30,13 +35,13 @@ public class UserServiceImpl implements UserService {
     private final RoleRepository roleRepository;
     private final MessageSource messageSource;
     private final UserMapper userMapper;
-    private final PasswordEncoder encoder;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public UserResponseDTO create(UserRequestDTO userRequestDTO) {
         User user = User.builder()
             .userName(userRequestDTO.getUserName())
-            .password(encoder.encode(userRequestDTO.getPassword().trim()))
+            .password(passwordEncoder.encode(userRequestDTO.getPassword().trim()))
             .firstName(userRequestDTO.getFirstName().trim())
             .lastName(userRequestDTO.getLastName().trim())
             .email(userRequestDTO.getEmail().trim())
@@ -44,7 +49,7 @@ public class UserServiceImpl implements UserService {
             .created(LocalDateTime.now())
             .roles(Set.of(roleRepository.findByRole(UserRole.USER).get()))
             .build();
-        return userMapper.toResponseDTO(userRepository.save(user));
+        return userMapper.toUserResponseDTO(userRepository.save(user));
     }
 
     @Override
@@ -61,6 +66,25 @@ public class UserServiceImpl implements UserService {
                 messageSource.getMessage(
                     Error.SEARCH_CRITERIA_OPERATION_NOT_SUPPORTED.getKey(), new Object[]{e.getMessage()}, locale));
         }
-        return userData.map(userMapper::toResponseDTO);
+        return userData.map(userMapper::toUserResponseDTO);
+    }
+
+    @Override
+    public UserDetailsResponseDTO getUserDetails(String userName, Locale locale) {
+        User user = getByUserName(userName, locale);
+        return userMapper.toUserDetailsResponseDTO(user);
+    }
+
+    @Override
+    public User getUserByUserName(String name, Locale locale) {
+        return getByUserName(name, locale);
+    }
+
+    private User getByUserName(String userName, Locale locale) {
+        Object[] params = new Object[]{Entity.USER.getName(), Entity.UserField.USER_NAME.getFieldName(), userName};
+        return userRepository
+            .findByUserName(userName)
+            .orElseThrow(() ->
+                new EntityNotFoundException(messageSource.getMessage(Error.ENTITY_NOT_FOUND.getKey(), params, locale)));
     }
 }

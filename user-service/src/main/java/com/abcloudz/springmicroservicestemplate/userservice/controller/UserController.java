@@ -1,5 +1,6 @@
 package com.abcloudz.springmicroservicestemplate.userservice.controller;
 
+import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserDetailsResponseDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserRequestDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserResponseDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserSearchRequestDTO;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import javax.ws.rs.QueryParam;
 import java.util.Locale;
 
 @Tag(name = "User Service REST API")
@@ -33,5 +35,11 @@ public class UserController {
     @PostMapping
     public ResponseEntity<UserResponseDTO> create(@Valid @RequestBody UserRequestDTO userRequestDTO) {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userRequestDTO));
+    }
+
+    @GetMapping(value = "/user-details")
+    public ResponseEntity<UserDetailsResponseDTO> getByUserName(@QueryParam("userName") String userName,
+                                                                @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale) {
+        return ResponseEntity.ok(userService.getUserDetails(userName, locale));
     }
 }

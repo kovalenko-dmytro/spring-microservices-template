@@ -4,7 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.core.userdetails.User;
@@ -12,6 +11,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -32,7 +32,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public InMemoryUserDetailsManager userDetailsService() {
+    public UserDetailsManager userDetailsService() {
         UserDetails user = User
             .withUsername(userName)
             .password(passwordEncoder().encode(password))
@@ -46,10 +46,11 @@ public class SecurityConfig {
         http.
             csrf().disable()
             .authorizeRequests()
-            .antMatchers(HttpMethod.GET, "/eureka/**").authenticated()
-            .antMatchers(HttpMethod.POST, "/eureka/**").authenticated()
-            .antMatchers(HttpMethod.DELETE, "/eureka/**").authenticated()
-            .anyRequest().authenticated().and().httpBasic();
+            .antMatchers("/eureka/**")
+            .authenticated()
+            .and()
+            .httpBasic();
+
         return http.build();
     }
 }

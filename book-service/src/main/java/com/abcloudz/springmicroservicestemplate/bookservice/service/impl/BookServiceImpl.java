@@ -1,5 +1,6 @@
 package com.abcloudz.springmicroservicestemplate.bookservice.service.impl;
 
+import com.abcloudz.springmicroservicestemplate.bookservice.common.Entity;
 import com.abcloudz.springmicroservicestemplate.bookservice.common.message.Error;
 import com.abcloudz.springmicroservicestemplate.bookservice.dto.book.BookRequestDTO;
 import com.abcloudz.springmicroservicestemplate.bookservice.dto.book.BookResponseDTO;
@@ -59,7 +60,7 @@ public class BookServiceImpl implements BookService {
     }
 
     private Book getBookById(long bookId, Locale locale) {
-        Object[] params = new Object[]{Book.class.getName(), "id", bookId};
+        Object[] params = new Object[]{Entity.BOOK.getName(), Entity.BookField.BOOK_ID.getFieldName(), bookId};
         return bookRepository.findById(bookId)
             .orElseThrow(() ->
                 new EntityNotFoundException(messageSource.getMessage(Error.ENTITY_NOT_FOUND.getKey(), params, locale)));
