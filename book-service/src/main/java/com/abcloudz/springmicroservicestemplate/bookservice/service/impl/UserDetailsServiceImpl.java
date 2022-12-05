@@ -34,7 +34,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ResponseEntity<UserDetailsResponseDTO> response = userServiceClient.getByUserName(username, getAuthHeader());
+        ResponseEntity<UserDetailsResponseDTO> response = userServiceClient.getUserDetails(username, getAuthHeader());
         UserDetailsResponseDTO body = response.getBody();
         if (response.getStatusCode().isError() || Objects.isNull(body)) {
             Object[] params = new Object[]{Entity.USER.getName(), Entity.UserField.USER_NAME.getFieldName(), username};

@@ -4,6 +4,7 @@ import com.abcloudz.springmicroservicestemplate.userservice.dto.auth.SignInReque
 import com.abcloudz.springmicroservicestemplate.userservice.dto.auth.SignUpRequestDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserResponseDTO;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Locale;
 
 public interface AuthService {
@@ -11,4 +12,5 @@ public interface AuthService {
     void signIn(SignInRequestDTO signInRequestDTO);
     void signUp(SignUpRequestDTO signUpRequestDTO);
     UserResponseDTO getCurrentUser(Locale locale);
+    void logout(HttpServletRequest request);
 }

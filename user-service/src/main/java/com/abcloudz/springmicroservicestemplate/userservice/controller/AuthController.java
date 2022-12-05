@@ -8,16 +8,11 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.util.Locale;
-import java.util.Objects;
 
 @Tag(name = "User Service Authentication REST API")
 @RestController
@@ -26,7 +21,6 @@ import java.util.Objects;
 public class AuthController {
 
     private final AuthService authService;
-    private final LogoutHandler logoutHandler;
 
     @PostMapping(value = "/sign-in")
     public ResponseEntity<?> signIn(@Valid @RequestBody SignInRequestDTO requestDTO) {
@@ -46,11 +40,8 @@ public class AuthController {
     }
 
     @GetMapping(value = "/logout")
-    public ResponseEntity<?> logout(HttpServletRequest request, HttpServletResponse response) {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        if (Objects.nonNull(auth)){
-            logoutHandler.logout(request, response, auth);
-        }
+    public ResponseEntity<?> logout(HttpServletRequest request) {
+        authService.logout(request);
         return ResponseEntity.ok().build();
     }
 }

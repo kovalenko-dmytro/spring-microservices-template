@@ -9,7 +9,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
@@ -19,13 +18,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.HttpStatusEntryPoint;
-import org.springframework.security.web.authentication.logout.LogoutHandler;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -36,11 +31,6 @@ public class SecurityConfig {
     private String accessUserDetailsUserName;
     @Value("${access.load.user.password}")
     private String accessUserDetailsPassword;
-
-    @Bean
-    public LogoutHandler logoutHandler() {
-        return new SecurityContextLogoutHandler();
-    }
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
@@ -60,6 +50,8 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
+            .formLogin().disable()
+            .httpBasic().disable()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::newSession)
@@ -68,17 +60,12 @@ public class SecurityConfig {
             .maxSessionsPreventsLogin(false)
             .and().and()
             .authorizeRequests()
-            .antMatchers("/api/v1/users/user-details").permitAll()
-            .anyRequest().authenticated()
+            .antMatchers("/api/v1/auth/sign-in", "/api/v1/auth/sign-up", "/api/v1/users/user-details")
+            .permitAll()
+            .anyRequest()
+            .authenticated()
             .and()
-            .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED))
-            .and()
-            .formLogin().disable()
-            .httpBasic().disable()
-            .logout()
-            .logoutRequestMatcher(new AntPathRequestMatcher("/api/v1/auth/logout"))
-            .invalidateHttpSession(true)
-            .clearAuthentication(true);
+            .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 
         return http.build();
     }
@@ -87,10 +74,7 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web) ->
             web.ignoring()
-                .antMatchers("/api/v1/auth/sign-in",
-                    "/api/v1/auth/sign-up",
-                    "/api/v1/users/user-details",
-                    "/api-docs",
+                .antMatchers("/api-docs",
                     "/api-docs/**",
                     "/v3/api-docs/**",
                     "/configuration/ui",

@@ -5,6 +5,7 @@ import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserRequest
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserResponseDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserSearchRequestDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -37,9 +38,10 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.create(userRequestDTO));
     }
 
+    @Hidden
     @GetMapping(value = "/user-details")
-    public ResponseEntity<UserDetailsResponseDTO> getByUserName(@QueryParam("userName") String userName,
-                                                                @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale) {
+    public ResponseEntity<UserDetailsResponseDTO> getUserDetails(@QueryParam("userName") String userName,
+                                                                 @RequestParam(value = "locale", required = false, defaultValue = "en") Locale locale) {
         return ResponseEntity.ok(userService.getUserDetails(userName, locale));
     }
 }

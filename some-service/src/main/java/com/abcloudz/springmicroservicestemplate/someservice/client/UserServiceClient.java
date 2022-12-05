@@ -12,6 +12,6 @@ import javax.ws.rs.QueryParam;
 public interface UserServiceClient {
 
     @GetMapping(value = "/user-details")
-    ResponseEntity<UserDetailsResponseDTO> getByUserName(@QueryParam("userName") String userName,
-                                                         @RequestHeader("Authorization") String header);
+    ResponseEntity<UserDetailsResponseDTO> getUserDetails(@QueryParam("userName") String userName,
+                                                          @RequestHeader("Authorization") String header);
 }
