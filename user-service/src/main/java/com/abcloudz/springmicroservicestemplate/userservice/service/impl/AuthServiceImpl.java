@@ -51,6 +51,11 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
+    public org.springframework.security.core.userdetails.User getUserDetails(String userName, Locale locale) {
+        return userMapper.toUSerDetails(userService.getUserByUserName(userName, locale));
+    }
+
+    @Override
     public void logout(HttpServletRequest request) {
         HttpSession session = request.getSession(false);
         if (Objects.nonNull(session)) {

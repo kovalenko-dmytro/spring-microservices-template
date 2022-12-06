@@ -4,11 +4,11 @@ import com.abcloudz.springmicroservicestemplate.someservice.client.UserServiceCl
 import com.abcloudz.springmicroservicestemplate.someservice.common.CommonConstant;
 import com.abcloudz.springmicroservicestemplate.someservice.common.Entity;
 import com.abcloudz.springmicroservicestemplate.someservice.common.message.Error;
-import com.abcloudz.springmicroservicestemplate.someservice.dto.user.UserDetailsResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.MessageSource;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -34,8 +34,8 @@ public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        ResponseEntity<UserDetailsResponseDTO> response = userServiceClient.getUserDetails(username, getAuthHeader());
-        UserDetailsResponseDTO body = response.getBody();
+        ResponseEntity<User> response = userServiceClient.getUserDetails(username, getAuthHeader());
+        User body = response.getBody();
         if (response.getStatusCode().isError() || Objects.isNull(body)) {
             Object[] params = new Object[]{Entity.USER.getName(), Entity.UserField.USER_NAME.getFieldName(), username};
             throw new UsernameNotFoundException(messageSource.getMessage(Error.ENTITY_NOT_FOUND.getKey(), params, Locale.ENGLISH));

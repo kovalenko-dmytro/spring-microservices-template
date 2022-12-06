@@ -1,6 +1,7 @@
 package com.abcloudz.springmicroservicestemplate.userservice.service.impl;
 
 import com.abcloudz.springmicroservicestemplate.userservice.service.UserService;
+import com.abcloudz.springmicroservicestemplate.userservice.util.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -14,9 +15,10 @@ import java.util.Locale;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final UserService userService;
+    private final UserMapper userMapper;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userService.getUserDetails(username, Locale.ENGLISH);
+        return userMapper.toUSerDetails(userService.getUserByUserName(username, Locale.ENGLISH));
     }
 }

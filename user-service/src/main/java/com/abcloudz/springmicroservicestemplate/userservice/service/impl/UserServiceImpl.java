@@ -2,7 +2,6 @@ package com.abcloudz.springmicroservicestemplate.userservice.service.impl;
 
 import com.abcloudz.springmicroservicestemplate.userservice.common.Entity;
 import com.abcloudz.springmicroservicestemplate.userservice.common.message.Error;
-import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserDetailsResponseDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserRequestDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserResponseDTO;
 import com.abcloudz.springmicroservicestemplate.userservice.dto.user.UserSearchRequestDTO;
@@ -67,12 +66,6 @@ public class UserServiceImpl implements UserService {
                     Error.SEARCH_CRITERIA_OPERATION_NOT_SUPPORTED.getKey(), new Object[]{e.getMessage()}, locale));
         }
         return userData.map(userMapper::toUserResponseDTO);
-    }
-
-    @Override
-    public UserDetailsResponseDTO getUserDetails(String userName, Locale locale) {
-        User user = getByUserName(userName, locale);
-        return userMapper.toUserDetailsResponseDTO(user);
     }
 
     @Override

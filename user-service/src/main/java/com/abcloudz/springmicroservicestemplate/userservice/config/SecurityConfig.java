@@ -42,7 +42,7 @@ public class SecurityConfig {
         FilterRegistrationBean<LoadUserDetailsFilter> registrationBean = new FilterRegistrationBean<>();
         registrationBean.setFilter(
             new LoadUserDetailsFilter(accessUserDetailsUserName, accessUserDetailsPassword, passwordEncoder));
-        registrationBean.addUrlPatterns("/api/v1/users/user-details");
+        registrationBean.addUrlPatterns("/api/v1/auth/user-details");
         return registrationBean;
     }
 
@@ -50,8 +50,6 @@ public class SecurityConfig {
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http
             .csrf().disable()
-            .formLogin().disable()
-            .httpBasic().disable()
             .sessionManagement()
             .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
             .sessionFixation(SessionManagementConfigurer.SessionFixationConfigurer::newSession)
@@ -60,11 +58,13 @@ public class SecurityConfig {
             .maxSessionsPreventsLogin(false)
             .and().and()
             .authorizeRequests()
-            .antMatchers("/api/v1/auth/sign-in", "/api/v1/auth/sign-up", "/api/v1/users/user-details")
+            .antMatchers("/api/v1/auth/sign-in", "/api/v1/auth/sign-up", "/api/v1/auth/user-details")
             .permitAll()
             .anyRequest()
             .authenticated()
             .and()
+            .formLogin().disable()
+            .httpBasic().disable()
             .exceptionHandling().authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED));
 
         return http.build();
