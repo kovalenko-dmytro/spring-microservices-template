@@ -1,9 +1,6 @@
 package com.abcloudz.springmicroservicestemplate.userservice.config;
 
-import com.abcloudz.springmicroservicestemplate.userservice.filter.LoadUserDetailsFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.web.servlet.FilterRegistrationBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
@@ -27,23 +24,9 @@ public class SecurityConfig {
     private final UserDetailsService userDetailsServiceImpl;
     private final PasswordEncoder passwordEncoder;
 
-    @Value("${access.load.user.username}")
-    private String accessUserDetailsUserName;
-    @Value("${access.load.user.password}")
-    private String accessUserDetailsPassword;
-
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
-    }
-
-    @Bean
-    public FilterRegistrationBean<LoadUserDetailsFilter> loadUserDetailsFilter() {
-        FilterRegistrationBean<LoadUserDetailsFilter> registrationBean = new FilterRegistrationBean<>();
-        registrationBean.setFilter(
-            new LoadUserDetailsFilter(accessUserDetailsUserName, accessUserDetailsPassword, passwordEncoder));
-        registrationBean.addUrlPatterns("/api/v1/auth/user-details");
-        return registrationBean;
     }
 
     @Bean
@@ -58,7 +41,7 @@ public class SecurityConfig {
             .maxSessionsPreventsLogin(false)
             .and().and()
             .authorizeRequests()
-            .antMatchers("/api/v1/auth/sign-in", "/api/v1/auth/sign-up", "/api/v1/auth/user-details")
+            .antMatchers("/api/v1/auth/sign-in", "/api/v1/auth/sign-up")
             .permitAll()
             .anyRequest()
             .authenticated()
