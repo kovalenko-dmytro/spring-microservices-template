@@ -7,7 +7,7 @@ spring:
     user:
       name: ${CONFIG_SERVER_SECURITY_USERNAME}
       password: ${CONFIG_SERVER_SECURITY_PASSWORD}
-      roles: SYSTEM
+      roles: ${CONFIG_SERVER_SECURITY_ROLE}
   cloud:
     config:
       server:
