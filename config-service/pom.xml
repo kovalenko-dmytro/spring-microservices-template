@@ -5,12 +5,12 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>com.abcloudz</groupId>
+		<groupId>com.gmail.apachdima</groupId>
 		<artifactId>spring-microservices-template</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 
-	<groupId>com.abcloudz.spring-microservices-template</groupId>
+	<groupId>com.gmail.apachdima.spring-microservices-template</groupId>
 	<artifactId>config-service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>config-service</name>
