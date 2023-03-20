@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      xmlns:th="http://www.thymeleaf.org"
+      layout:decorate="~{fragments/layout}">
+
+<head>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Index</title>
+</head>
+
+<body>
+<!-- Page Content -->
+<div layout:fragment="content" th:remove="tag">
+    <div class="container px-4 py-5" id="books">
+        <h2 class="pb-2 border-bottom">Books:</h2>
+        <div class="row g-4 py-5 row-cols-1 row-cols-lg-3">
+            <div class="col d-flex align-items-start">
+                <div class="table-responsive" th:if="${books != null}">
+                    <table th:if="${not#lists.isEmpty(books.content)}" class="table table-striped table-bordered table-hover">
+                        <thead class="text-center">
+                        <tr>
+                            <th class="text-center">ID</th>
+                            <th class="text-center">Author</th>
+                            <th class="text-center">Title</th>
+                            <th class="text-center">Date created</th>
+                            <th class="text-center" colspan="3">Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="book: ${books.content}">
+                            <td class="text-right" th:text="${book.bookId}"></td>
+                            <td class="text-right" th:text="${book.author}"></td>
+                            <td class="text-right" th:text="${book.title}"></td>
+                            <td class="text-right" th:text="${book.addedAt}"></td>
+                            <td><a class="btn btn-sm btn-primary btn-block" th:href="@{'/dashboard/books/' + ${book.bookId}}">View</a></td>
+                            <td><a class="btn btn-sm btn-warning btn-block" th:href="@{'/dashboard/books/' + ${book.bookId} + '/update'}">Edit</a></td>
+                            <td>
+                                <form method="post" th:action="@{'/dashboard/books/' + ${book.bookId}}">
+                                    <input type="hidden" name="_method" value="delete">
+                                    <input class="btn btn-sm btn-danger btn-block" type="submit" value="Delete">
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                    <div th:if="${books.totalPages > 0}" class="pagination"
+                         th:each="pageNumber : ${pageNumbers}">
+                        <a th:href="@{/dashboard/books(size=${books.size}, page=${pageNumber})}"
+                           th:text=${pageNumber}
+                           th:class="${pageNumber==books.number + 1} ? active"></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
