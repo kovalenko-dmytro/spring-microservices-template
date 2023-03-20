@@ -17,7 +17,7 @@
 	<description>Spring Boot microservices template application configuration service</description>
 
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<spring-cloud.version>2021.0.4</spring-cloud.version>
 	</properties>
