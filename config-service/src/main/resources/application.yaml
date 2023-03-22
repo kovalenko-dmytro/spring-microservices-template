@@ -22,9 +22,9 @@ eureka:
     region: default
     registryFetchIntervalSeconds: 20
     serviceUrl:
-      defaultZone: http://${DISCOVERY_SERVER_SECURITY_USERNAME}:${DISCOVERY_SERVER_SECURITY_PASSWORD}@${APP_HOST}:${DISCOVERY_SERVER_PORT}/${APP_CONTEXT_PATH}/eureka/
+      defaultZone: http://${DISCOVERY_SERVICE_SECURITY_USERNAME}:${DISCOVERY_SERVICE_SECURITY_PASSWORD}@${APP_HOST}:${DISCOVERY_SERVICE_PORT}/${DISCOVERY_SERVICE_CONTEXT_PATH}/eureka/
 
 server:
   port: ${CONFIG_SERVER_PORT}
   servlet:
-    context-path: /${APP_CONTEXT_PATH}
+    context-path: /config-service

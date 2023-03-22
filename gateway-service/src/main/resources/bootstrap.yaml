@@ -8,4 +8,4 @@ spring:
       profile: ${APP_PROFILE}
       username: ${CONFIG_SERVER_SECURITY_USERNAME}
       password: ${CONFIG_SERVER_SECURITY_PASSWORD}
-      uri: http://${APP_HOST}:${CONFIG_SERVER_PORT}/${APP_CONTEXT_PATH}
+      uri: http://${APP_HOST}:${CONFIG_SERVER_PORT}/config-service

@@ -1,0 +1,61 @@
+version: '3'
+services:
+  redis:
+    container_name: redis
+    image: redis:7.0.5-alpine
+    hostname: ${REDIS_HOST}
+    ports:
+      - "${REDIS_EXTERNAL_PORT}:${REDIS_INTERNAL_PORT}"
+    restart: always
+    command: redis-server --save 20 1 --loglevel warning --requirepass ${REDIS_PASSWORD}
+    env_file: .env
+
+  elasticsearch:
+    container_name: elasticsearch
+    image: elasticsearch:7.17.7
+    hostname: ${ELASTICSEARCH_HOST}
+    ports:
+      - "${ELASTICSEARCH_EXTERNAL_PORT}:${ELASTICSEARCH_INTERNAL_PORT}"
+      - "${ELASTICSEARCH_UI_EXTERNAL_PORT}:${ELASTICSEARCH_UI_INTERNAL_PORT}"
+    environment:
+      ELASTIC_PASSWORD: ${ELASTICSEARCH_PASSWORD}
+      discovery.type: single-node
+    env_file: .env
+
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin:latest
+    hostname: ${ZIPKIN_HOST}
+    ports:
+      - "${ZIPKIN_EXTERNAL_PORT}:${ZIPKIN_INTERNAL_PORT}"
+    environment:
+      STORAGE_TYPE: elasticsearch
+      ES_HOSTS: elasticsearch:${ELASTICSEARCH_EXTERNAL_PORT}
+      ES_PASSWORD: ${ZIPKIN_PASSWORD}
+      RABBIT_QUEUE: zipkin
+      RABBIT_ADDRESSES: rabbitmq:${RABBITMQ_EXTERNAL_PORT}
+      RABBIT_PASSWORD: ${RABBITMQ_PASSWORD}
+      RABBIT_USER: ${RABBITMQ_USERNAME}
+    depends_on:
+      elasticsearch:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    env_file: .env
+
+  rabbitmq:
+    container_name: rabbitmq
+    image: rabbitmq:3.8-management-alpine
+    hostname: ${RABBITMQ_HOST}
+    ports:
+      - "${RABBITMQ_EXTERNAL_PORT}:${RABBITMQ_INTERNAL_PORT}"
+      - "${RABBITMQ_UI_EXTERNAL_PORT}:${RABBITMQ_UI_INTERNAL_PORT}"
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    healthcheck:
+      test: [ "CMD", "rabbitmqctl", "status" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    env_file: .env
