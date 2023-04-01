@@ -4,8 +4,8 @@ spring:
   cloud:
     config:
       name: user-service
-      label: ${CONFIG_SERVER_GIT_URI_BRANCH}
+      label: ${CONFIG_SERVICE_GIT_URI_BRANCH}
       profile: ${APP_PROFILE}
-      username: ${CONFIG_SERVER_SECURITY_USERNAME}
-      password: ${CONFIG_SERVER_SECURITY_PASSWORD}
-      uri: http://${APP_HOST}:${CONFIG_SERVER_PORT}/config-service
+      username: ${CONFIG_SERVICE_SECURITY_USERNAME}
+      password: ${CONFIG_SERVICE_SECURITY_PASSWORD}
+      uri: http://${APP_HOST}:${CONFIG_SERVICE_PORT}/${CONFIG_SERVICE_CONTEXT_PATH}

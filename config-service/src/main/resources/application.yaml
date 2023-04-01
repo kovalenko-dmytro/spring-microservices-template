@@ -5,17 +5,17 @@ spring:
     active: ${APP_PROFILE}
   security:
     user:
-      name: ${CONFIG_SERVER_SECURITY_USERNAME}
-      password: ${CONFIG_SERVER_SECURITY_PASSWORD}
-      roles: ${CONFIG_SERVER_SECURITY_ROLE}
+      name: ${CONFIG_SERVICE_SECURITY_USERNAME}
+      password: ${CONFIG_SERVICE_SECURITY_PASSWORD}
+      roles: ${CONFIG_SERVICE_SECURITY_ROLE}
   cloud:
     config:
       server:
         git:
-          default-label: ${CONFIG_SERVER_GIT_URI_BRANCH}
-          uri: ${CONFIG_SERVER_GIT_URI}
-          username: ${CONFIG_SERVER_GIT_URI_USERNAME}
-          password: ${CONFIG_SERVER_GIT_URI_PASSWORD}
+          default-label: ${CONFIG_SERVICE_GIT_URI_BRANCH}
+          uri: ${CONFIG_SERVICE_GIT_URI}
+          username: ${CONFIG_SERVICE_GIT_URI_USERNAME}
+          password: ${CONFIG_SERVICE_GIT_URI_PASSWORD}
 
 eureka:
   client:
@@ -25,6 +25,6 @@ eureka:
       defaultZone: http://${DISCOVERY_SERVICE_SECURITY_USERNAME}:${DISCOVERY_SERVICE_SECURITY_PASSWORD}@${APP_HOST}:${DISCOVERY_SERVICE_PORT}/${DISCOVERY_SERVICE_CONTEXT_PATH}/eureka/
 
 server:
-  port: ${CONFIG_SERVER_PORT}
+  port: ${CONFIG_SERVICE_PORT}
   servlet:
-    context-path: /config-service
+    context-path: /${CONFIG_SERVICE_CONTEXT_PATH}
